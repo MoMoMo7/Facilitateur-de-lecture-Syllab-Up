@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllab'Up - Entraînement à la lecture (17 ans)</title>
+    <!-- Police Atkinson Hyperlegible conçue pour le confort visuel et la dyslexie -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- =====================================================================
+         PARTIE 1 : STYLE VISUEL (CSS)
+         ===================================================================== -->
+    <style>
+        :root {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --syl-1: #1d4ed8; /* Bleu soutenu */
+            --syl-2: #b91c1c; /* Rouge brique */
+            --silent: #94a3b8; /* Gris pour les lettres muettes */
+            --font-reading: 'Atkinson Hyperlegible', sans-serif;
+            --font-size-reading: 22px;
+            --letter-spacing: 0.04em;
+            --line-height: 2.1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid #bfdbfe;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 24px auto;
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        select, button, input[type="text"], textarea {
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: #fff;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: #fff;
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-outline.active {
+            background-color: #eff6ff;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Barre d'outils LireCouleur & Audio */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding-right: 12px;
+            border-right: 1px solid var(--border);
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        /* Zone de lecture */
+        .reading-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        #reading-area {
+            font-family: var(--font-reading);
+            font-size: var(--font-size-reading);
+            letter-spacing: var(--letter-spacing);
+            line-height: var(--line-height);
+            padding: 24px;
+            background-color: #fcfcfd;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            min-height: 180px;
+            user-select: none;
+        }
+
+        .word {
+            display: inline-block;
+            cursor: pointer;
+            padding: 2px 3px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+
+        .word:hover {
+            background-color: #e0f2fe;
+        }
+
+        .word.difficult-marked {
+            text-decoration: underline wavy #ef4444;
+            background-color: #fef2f2;
+        }
+
+        /* Colorisation des syllabes */
+        .color-mode .syl-even {
+            color: var(--syl-1);
+        }
+
+        .color-mode .syl-odd {
+            color: var(--syl-2);
+        }
+
+        .color-mode .silent-letter {
+            color: var(--silent);
+        }
+
+        /* Zoom mot sélectionné */
+        #word-inspector {
+            margin-top: 16px;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 8px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .inspector-syllables {
+            font-family: var(--font-reading);
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        /* Section Compréhension */
+        .quiz-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .quiz-item {
+            margin-bottom: 16px;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .quiz-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .quiz-btn.correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #15803d;
+            font-weight: 600;
+        }
+
+        .quiz-btn.wrong {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #b91c1c;
+        }
+
+        /* Carnet de suivi */
+        .feedback-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 12px 0 20px 0;
+        }
+
+        .history-list {
+            list-style: none;
+            margin-top: 12px;
+            max-height: 240px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .history-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-custom {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-custom textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<!-- =====================================================================
+     PARTIE 2 : STRUCTURE DE LA PAGE (HTML)
+     ===================================================================== -->
+<header>
+    <div class="brand">
+        <div class="brand-logo">Syllab'Up</div>
+        <h1>Lecture & Syllabes (17 ans)</h1>
+    </div>
+    <div class="stats-bar">
+        <div class="stat-badge" id="streak-display">🔥 0 séance(s) validée(s)</div>
+        <div class="stat-badge" id="words-count-display">📌 0 mot(s) à revoir</div>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- Bloc 1 : Sélection du niveau et du thème -->
+    <div class="card">
+        <div class="controls-grid">
+            <div>
+                <label for="level-select">Niveau de difficulté progressive</label>
+                <select id="level-select" onchange="loadNextText()">
+                    <option value="1">Niveau 1 : Déclic (Syllabes simples)</option>
+                    <option value="2">Niveau 2 : Fluidité (Doubles consonnes)</option>
+                    <option value="3">Niveau 3 : Consolidation (Sons complexes)</option>
+                    <option value="4">Niveau 4 : Autonomie (Texte courant)</option>
+                </select>
+            </div>
+            <div>
+                <label for="theme-select">Centre d'intérêt</label>
+                <select id="theme-select" onchange="loadNextText()">
+                    <option value="all">Tous les thèmes du quotidien</option>
+                    <option value="gaming">Jeux vidéo & Tech</option>
+                    <option value="music">Musique & Culture</option>
+                    <option value="sport">Sport & Sneakers</option>
+                    <option value="life">Vie quotidienne & Projets (17 ans)</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 8px;">
+                <button class="btn btn-primary" style="width: 100%;" onclick="loadNextText()">
+                    🔄 Nouveau texte
+                </button>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="library-counter">16 textes disponibles</span>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-outline" style="font-size: 0.85rem; padding: 6px 12px;" onclick="openInLireCouleur()">
+                    🌐 Ouvrir sur le site LireCouleur
+                </button>
+                <button class="btn btn-outline" style="font-size: 0.85rem; padding: 6px 12px;" onclick="toggleCustomText()">
+                    ✏️ Coller mon propre texte
+                </button>
+            </div>
+        </div>
+
+        <div id="custom-text-box" class="modal-custom">
+            <label for="custom-input">Colle ici n'importe quel texte (article, message, cours) pour le découper en syllabes :</label>
+            <textarea id="custom-input" placeholder="Écris ou colle ton texte ici..."></textarea>
+            <button class="btn btn-primary" onclick="applyCustomText()">Afficher avec les couleurs</button>
+        </div>
+    </div>
+
+    <!-- Bloc 2 : Lecteur Syllabique & Audio -->
+    <div class="card">
+        <div class="toolbar">
+            <!-- Couleurs Syllabes -->
+            <div class="toolbar-group">
+                <button id="btn-toggle-colors" class="btn btn-outline active" onclick="toggleColors()">
+                    🎨 Couleurs Syllabes : ON
+                </button>
+                <select id="palette-select" style="width: auto; padding: 8px;" onchange="changePalette()" title="Choix des couleurs">
+                    <option value="blue-red">Bleu / Rouge</option>
+                    <option value="black-blue">Noir / Bleu</option>
+                    <option value="green-purple">Vert / Violet</option>
+                </select>
+            </div>
+
+            <!-- Taille police -->
+            <div class="toolbar-group">
+                <button class="btn btn-outline" onclick="changeFontSize(-2)" title="Réduire le texte">A-</button>
+                <button class="btn btn-outline" onclick="changeFontSize(2)" title="Agrandir le texte">A+</button>
+            </div>
+
+            <!-- Audio -->
+            <div class="toolbar-group">
+                <button id="btn-speak-all" class="btn btn-primary" onclick="speakFullText()">
+                    🔊 Écouter le texte
+                </button>
+                <button class="btn btn-outline" onclick="stopSpeech()">⏹️ Stop</button>
+                <select id="speed-select" style="width: auto; padding: 8px;" title="Vitesse de lecture">
+                    <option value="0.65">Vitesse : Lente (0.65x)</option>
+                    <option value="0.85" selected>Vitesse : Posée (0.85x)</option>
+                    <option value="1.0">Vitesse : Normale (1x)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="reading-header">
+            <div>
+                <span class="tag" id="current-tag">Niveau 1 • Gaming</span>
+                <h2 id="text-title" style="margin-top: 6px; font-size: 1.25rem;">Titre du texte</h2>
+            </div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">
+                💡 Clique sur un mot pour voir ses syllabes et l'écouter
+            </span>
+        </div>
+
+        <!-- Zone d'affichage du texte découpé -->
+        <div id="reading-area" class="color-mode"></div>
+
+        <!-- Zoom sur un mot cliqué -->
+        <div id="word-inspector">
+            <div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px;">Découpage syllabique du mot :</div>
+                <div class="inspector-syllables" id="inspector-syllables-text">or - di - na - teur</div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btn-speak-word">🔊 Réécouter ce mot</button>
+                <button class="btn btn-outline" id="btn-mark-difficult">📌 Noter comme difficile</button>
+            </div>
+        </div>
+
+        <!-- Mini Quiz de compréhension -->
+        <div class="quiz-section" id="quiz-container"></div>
+    </div>
+
+    <!-- Bloc 3 : Carnet de suivi & Partage -->
+    <div class="card">
+        <h3 style="margin-bottom: 8px;">📓 Mon carnet de suivi</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
+            Comment s'est passée la lecture de ce texte ? Valide ta séance pour enregistrer tes progrès.
+        </p>
+
+        <div class="feedback-buttons">
+            <button class="btn btn-outline" onclick="validateSession('Facile ✅')">😎 C'était facile</button>
+            <button class="btn btn-outline" onclick="validateSession('Moyen 👍')">💪 Un peu de concentration</button>
+            <button class="btn btn-outline" onclick="validateSession('Difficile 🔥')">🧗 Difficile mais réussi</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);">
+            <div>
+                <strong>Historique récent & Mots à revoir</strong>
+                <div id="difficult-words-list" style="font-size: 0.85rem; color: #b91c1c; margin-top: 4px;">
+                    Aucun mot difficile enregistré.
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="copyReportToClipboard()">
+                    📋 Copier le bilan pour le partager
+                </button>
+                <button class="btn btn-outline" onclick="downloadReport()">
+                    ⬇️ Télécharger (.txt)
+                </button>
+                <button class="btn btn-outline" style="color: #dc2626;" onclick="clearDifficultWords()" title="Vider la liste des mots difficiles">
+                    🗑️ Effacer mots
+                </button>
+            </div>
+        </div>
+
+        <ul class="history-list" id="history-list"></ul>
+    </div>
+
+</div>
+
+<div id="toast" class="toast">Action effectuée !</div>
+
+<!-- =====================================================================
+     PARTIE 3 : LOGIQUE, DÉCOUPAGE SYLLABIQUE & AUDIO (JAVASCRIPT)
+     ===================================================================== -->
+<script>
+    // 1. BIBLIOTHÈQUE DE 16 TEXTES ADAPTÉS (17 ANS, 4 NIVEAUX)
+    const TEXT_DATABASE = [
+        // --- NIVEAU 1 : DÉCLIC (Syllabes simples, phrases courtes) ---
+        {
+            id: 101,
+            level: 1,
+            theme: "gaming",
+            title: "La nouvelle manette",
+            text: "Léo allume sa console dans sa chambre. Il a reçu une nouvelle manette noire pour son anniversaire. Le câble est long et solide. Il lance une partie rapide avec son ami Hugo. Ils parlent dans le micro. La connexion est fluide et le jeu démarre sans bug. Léo gagne le premier match.",
+            questions: [
+                { q: "De quelle couleur est la nouvelle manette de Léo ?", options: ["Noire", "Rouge", "Blanche"], answer: 0 },
+                { q: "Avec qui joue-t-il ?", options: ["Son frère", "Son ami Hugo", "Tout seul"], answer: 1 }
+            ]
+        },
+        {
+            id: 102,
+            level: 1,
+            theme: "music",
+            title: "Le concert du samedi",
+            text: "Sami adore le rap et la musique électro. Ce samedi soir, il va voir un artiste sur scène avec deux potes. Ils prennent le bus à dix-neuf heures. La salle est déjà pleine. Les lumières s'éteignent et les basses vibrent dans le sol. Le public lève les bras en rythme.",
+            questions: [
+                { q: "Comment Sami et ses amis vont-ils au concert ?", options: ["À pied", "En bus", "En voiture"], answer: 1 },
+                { q: "À quelle heure partent-ils ?", options: ["18h", "19h", "21h"], answer: 1 }
+            ]
+        },
+        {
+            id: 103,
+            level: 1,
+            theme: "life",
+            title: "Le premier job d'été",
+            text: "Yanis a dix-sept ans. Il cherche un petit boulot pour le mois de juillet. Il prépare un CV simple sur son ordinateur. Il note son nom, son âge et ses qualités. Il est ponctuel et motivé. Demain matin, il va déposer sa feuille à la boulangerie du quartier.",
+            questions: [
+                { q: "Pour quel mois Yanis cherche-t-il un travail ?", options: ["Juin", "Juillet", "Août"], answer: 1 },
+                { q: "Où va-t-il déposer son CV demain ?", options: ["À la boulangerie", "Au cinéma", "Au supermarché"], answer: 0 }
+            ]
+        },
+        {
+            id: 104,
+            level: 1,
+            theme: "sport",
+            title: "Séance au skatepark",
+            text: "Lucas prend son skate après les cours. Il retrouve Clara au parc de la ville. Le soleil brille et le sol est bien sec. Lucas tente une figure sur une petite rampe. Il tombe deux fois mais il ne lâche rien. Au troisième essai, il réussit son saut avec style.",
+            questions: [
+                { q: "Qui Lucas retrouve-t-il au parc ?", options: ["Hugo", "Clara", "Sami"], answer: 1 },
+                { q: "Au bout de combien d'essais réussit-il sa figure ?", options: ["Deux", "Trois", "Cinq"], answer: 1 }
+            ]
+        },
+
+        // --- NIVEAU 2 : FLUIDITÉ (Syllabes inverses, doubles consonnes) ---
+        {
+            id: 201,
+            level: 2,
+            theme: "sport",
+            title: "La paire de sneakers",
+            text: "Depuis trois mois, Malik économise pour acheter une paire de baskets précises. Ce modèle rétro est très recherché par les collectionneurs. Ce matin, une boutique en ligne remet quelques paires en stock. Malik clique rapidement sur sa pointure. La commande est validée juste avant la rupture de stock.",
+            questions: [
+                { q: "Depuis combien de temps Malik économise-t-il ?", options: ["Trois semaines", "Trois mois", "Un an"], answer: 1 },
+                { q: "Où achète-t-il les baskets ?", options: ["En magasin", "Sur une boutique en ligne", "À un ami"], answer: 1 }
+            ]
+        },
+        {
+            id: 202,
+            level: 2,
+            theme: "life",
+            title: "Le code de la route",
+            text: "Inès vient de s'inscrire à l'auto-école pour passer son permis en conduite accompagnée. Chaque soir, elle s'entraîne sur une application mobile avec des séries de quarante questions. Au début, elle fait souvent des erreurs sur les priorités et les panneaux. Après deux semaines régulières, son score dépasse enfin trente-cinq bonnes réponses.",
+            questions: [
+                { q: "Combien de questions contient chaque série ?", options: ["Vingt", "Trente", "Quarante"], answer: 2 },
+                { q: "Quel score dépasse-t-elle après deux semaines ?", options: ["30", "35", "38"], answer: 1 }
+            ]
+        },
+        {
+            id: 203,
+            level: 2,
+            theme: "gaming",
+            title: "Nettoyer son PC",
+            text: "Depuis quelques jours, l'ordinateur portable de Tom chauffe beaucoup pendant ses parties. Le ventilateur tourne à plein régime et fait un bruit sourd. Tom décide d'ouvrir le capot arrière avec un petit tournevis. Il retire la poussière bloquée dans les grilles avec une bombe à air sec. Aussitôt, la machine redevient silencieuse.",
+            questions: [
+                { q: "Pourquoi l'ordinateur de Tom fait-il du bruit ?", options: ["À cause de la poussière", "La batterie est morte", "L'écran est cassé"], answer: 0 },
+                { q: "Quel outil utilise-t-il pour enlever la poussière ?", options: ["Un chiffon humide", "Une bombe à air sec", "Un aspirateur"], answer: 1 }
+            ]
+        },
+        {
+            id: 204,
+            level: 2,
+            theme: "music",
+            title: "La playlist collaborative",
+            text: "Pour préparer leur trajet en train vers la mer, quatre amis créent une playlist partagée sur leur téléphone. Chacun ajoute dix morceaux qu'il écoute en boucle ces temps-ci. Le mélange est surprenant : il y a du rock alternatif, de la pop française et des classiques des années deux mille. Tout le monde découvre de nouveaux artistes.",
+            questions: [
+                { q: "Combien de morceaux chaque ami ajoute-t-il ?", options: ["Cinq", "Dix", "Quinze"], answer: 1 },
+                { q: "Quel moyen de transport vont-ils prendre ?", options: ["Le train", "L'avion", "Le bus"], answer: 0 }
+            ]
+        },
+
+        // --- NIVEAU 3 : CONSOLIDATION (Sons complexes : oin, ien, ill, gn, ph) ---
+        {
+            id: 301,
+            level: 3,
+            theme: "gaming",
+            title: "Le tournoi en équipe",
+            text: "Ce week-end, l'équipe d'esport du lycée participe à un tournoi régional. Les cinq joueurs se rejoignent en vocal pour peaufiner leur stratégie. Chacun occupe un rôle précis : soutien, attaque ou défense. Lors de la demi-finale, la communication reste calme malgré la pression. Une action décisive dans les dernières secondes leur offre la victoire.",
+            questions: [
+                { q: "Combien de joueurs composent l'équipe ?", options: ["Trois", "Cinq", "Six"], answer: 1 },
+                { q: "Comment reste la communication pendant la demi-finale ?", options: ["Tendue", "Calme", "Silencieuse"], answer: 1 }
+            ]
+        },
+        {
+            id: 302,
+            level: 3,
+            theme: "music",
+            title: "Créer son propre son",
+            text: "Avec un simple ordinateur portable et un casque audio, il est aujourd'hui possible de composer sa propre musique. Beaucoup de jeunes beatmakers utilisent des logiciels gratuits pour assembler des rythmes et des mélodies. Il faut de la patience pour régler chaque piste sonore et trouver le bon équilibre entre les instruments.",
+            questions: [
+                { q: "De quel matériel a-t-on besoin au minimum ?", options: ["Un studio complet", "Un ordinateur et un casque", "Une guitare électrique"], answer: 1 },
+                { q: "Quelle qualité est nécessaire pour régler les pistes ?", options: ["De la patience", "De la force", "De la chance"], answer: 0 }
+            ]
+        },
+        {
+            id: 303,
+            level: 3,
+            theme: "sport",
+            title: "L'entraînement en salle",
+            text: "Depuis la rentrée, Noah va à la salle de sport trois fois par semaine avec son cousin. Ils suivent un programme équilibré qui alterne exercices au poids du corps et cardio. Au lieu de chercher à soulever lourd trop vite, ils soignent chaque mouvement pour éviter les blessures. Après deux mois, ils gagnent en endurance.",
+            questions: [
+                { q: "Combien de fois par semaine Noah va-t-il à la salle ?", options: ["Deux fois", "Trois fois", "Cinq fois"], answer: 1 },
+                { q: "Pourquoi soignent-ils chaque mouvement ?", options: ["Pour aller plus vite", "Pour éviter les blessures", "Pour impressionner"], answer: 1 }
+            ]
+        },
+        {
+            id: 304,
+            level: 3,
+            theme: "life",
+            title: "Gérer son premier budget",
+            text: "À dix-sept ans, recevoir un peu d'argent de poche ou un salaire saisonnier apprend à faire des choix. Plutôt que de tout dépenser dès la première semaine en sorties ou en vêtements, il est malin de mettre une petite somme de côté. Avoir une réserve financière permet de financer un projet plus important, comme un voyage ou du matériel.",
+            questions: [
+                { q: "Que permet le fait de mettre une somme de côté ?", options: ["De financer un projet important", "De payer plus d'impôts", "De perdre son argent"], answer: 0 },
+                { q: "Quel exemple de projet est cité dans le texte ?", options: ["Un voyage ou du matériel", "Une maison", "Un bateau"], answer: 0 }
+            ]
+        },
+
+        // --- NIVEAU 4 : AUTONOMIE (Textes courants, syntaxe riche) ---
+        {
+            id: 401,
+            level: 4,
+            theme: "life",
+            title: "L'algorithme des réseaux",
+            text: "As-tu déjà remarqué que ton fil d'actualité te propose toujours le même genre de vidéos ? Les plateformes utilisent des algorithmes qui analysent le temps que tu passes sur chaque publication. Si tu regardes une vidéo de skateboard jusqu'au bout, le système en déduit que ce sujet t'intéresse et t'en proposera d'autres similaires. Comprendre ce mécanisme permet de garder le contrôle sur son attention et de diversifier ses découvertes.",
+            questions: [
+                { q: "Qu'analyse l'algorithme en priorité ?", options: ["Le temps passé sur chaque publication", "L'heure de la journée", "La marque du téléphone"], answer: 0 },
+                { q: "Pourquoi est-il utile de comprendre ce mécanisme ?", options: ["Pour avoir plus d'abonnés", "Pour garder le contrôle sur son attention", "Pour télécharger des vidéos"], answer: 1 }
+            ]
+        },
+        {
+            id: 402,
+            level: 4,
+            theme: "gaming",
+            title: "Les coulisses d'un jeu indépendant",
+            text: "Contrairement aux grandes productions qui mobilisent des centaines de développeurs, certains jeux vidéo marquants sont créés par une seule personne ou une minuscule équipe. Ces créateurs indépendants compensent leur budget limité par des idées originales, une direction artistique soignée et une bande-son mémorable. Ils échangent souvent directement avec leur communauté pour améliorer le jeu au fil des mises à jour.",
+            questions: [
+                { q: "Comment les créateurs indépendants compensent-ils leur petit budget ?", options: ["Par des idées originales et une direction artistique soignée", "Par beaucoup de publicité à la télé", "En copiant les grands jeux"], answer: 0 },
+                { q: "Avec qui échangent-ils directement pour améliorer le jeu ?", options: ["Les journalistes", "Leur communauté", "Les banques"], answer: 1 }
+            ]
+        },
+        {
+            id: 403,
+            level: 4,
+            theme: "sport",
+            title: "L'importance de la récupération",
+            text: "Dans n'importe quelle discipline sportive, la progression ne se fait pas uniquement pendant l'effort, mais surtout durant les phases de repos. Lorsque tu dors suffisamment, ton organisme répare les fibres musculaires sollicitées et consolide tes réflexes. Négliger le sommeil ou l'hydratation entraîne rapidement une baisse de régime, un manque de concentration et une fatigue persistante.",
+            questions: [
+                { q: "Quand la progression sportive se construit-elle principalement ?", options: ["Durant les phases de repos", "Uniquement pendant l'échauffement", "En mangeant beaucoup de sucre"], answer: 0 },
+                { q: "Qu'entraîne le manque de sommeil ?", options: ["Une baisse de régime et de concentration", "Une augmentation de la vitesse", "Aucun effet particulier"], answer: 0 }
+            ]
+        },
+        {
+            id: 404,
+            level: 4,
+            theme: "music",
+            title: "Le retour du format vinyle",
+            text: "Alors que le streaming permet d'écouter des millions de titres instantanément, le disque vinyle connaît un regain d'intérêt spectaculaire chez les jeunes générations. Posséder un objet physique avec une grande pochette illustrée change la manière d'écouter un album. Au lieu de zapper d'un morceau à l'autre toutes les trente secondes, on prend le temps d'apprécier l'œuvre dans son intégralité.",
+            questions: [
+                { q: "Qu'est-ce qui change lorsqu'on écoute un disque vinyle ?", options: ["On prend le temps d'écouter l'album en entier", "Le son est plus fort que sur ordinateur", "On peut changer de chanson à la voix"], answer: 0 },
+                { q: "Quel élément physique du vinyle est apprécié ?", options: ["Sa grande pochette illustrée", "Sa petite taille", "Son écran tactile"], answer: 0 }
+            ]
+        }
+    ];
+
+    // =====================================================================
+    // 2. MOTEUR DE DÉCOUPAGE SYLLABIQUE & LETTRES MUETTES (FRANÇAIS)
+    // =====================================================================
+    const VOWELS = "aeiouyàâäéèêëîïôöùûüÿœæAEIOUYÀÂÄÉÈÊËÎÏÔÖÙÛÜŸŒÆ";
+    const CONSONANTS = "bcdfghjklmnpqrstvwxzçBCDFGHJKLMNPQRSTVWXZÇ";
+
+    function isVowel(ch) {
+        return VOWELS.includes(ch);
+    }
+
+    function isConsonant(ch) {
+        return CONSONANTS.includes(ch);
+    }
+
+    // Groupes consonantiques insécables en français (ex: tr, pl, ch, ph, gn...)
+    const INSEPARABLE_CLUSTERS = [
+        "bl", "br", "ch", "cl", "cr", "dr", "fl", "fr", "gl", "gn", "gr",
+        "ph", "pl", "pr", "qu", "th", "tr", "vr"
+    ];
+
+    function syllabifyWord(word) {
+        // Isoler la ponctuation autour du mot
+        const match = word.match(/^([^a-zA-ZÀ-ÿœæŒÆ']*)([a-zA-ZÀ-ÿœæŒÆ']+)([^a-zA-ZÀ-ÿœæŒÆ']*)$/);
+        if (!match) return { prefix: "", syllables: [word], suffix: "", silent: "" };
+
+        const prefix = match[1];
+        let core = match[2];
+        const suffix = match[3];
+
+        if (core.length <= 2) {
+            return { prefix, syllables: [core], suffix, silent: "" };
+        }
+
+        // Détection des lettres muettes finales courantes (e, es, ent, s, t, d, x)
+        let silent = "";
+        const lower = core.toLowerCase();
+        const shortMonosyllables = ["le", "me", "te", "se", "ce", "de", "ne", "que", "je", "les", "des", "mes", "tes", "ses", "ces"];
+        
+        if (!shortMonosyllables.includes(lower) && core.length > 3) {
+            if (lower.endsWith("ent") && core.length > 5 && !lower.endsWith("ment")) {
+                silent = core.slice(-3);
+                core = core.slice(0, -3);
+            } else if (lower.endsWith("es") && core.length > 3) {
+                silent = core.slice(-2);
+                core = core.slice(0, -2);
+            } else if (lower.endsWith("e") && !lower.endsWith("ée") && !lower.endsWith("ie") && !lower.endsWith("ue")) {
+                silent = core.slice(-1);
+                core = core.slice(0, -1);
+            } else if (["s", "t", "d", "x"].includes(lower.slice(-1)) && !["est", "but", "net", "sud", "bus", "ours"].includes(lower)) {
+                silent = core.slice(-1);
+                core = core.slice(0, -1);
+            }
+        }
+
+        // Découpage en syllabes
+        let syllables = [];
+        let current = "";
+        let i = 0;
+
+        while (i < core.length) {
+            const ch = core[i];
+            current += ch;
+
+            if (isVowel(ch)) {
+                // Regrouper les voyelles adjacentes (ou, au, ei, eau...)
+                while (i + 1 < core.length && isVowel(core[i + 1])) {
+                    i++;
+                    current += core[i];
+                }
+
+                // Compter les consonnes suivantes
+                let consCount = 0;
+                let j = i + 1;
+                while (j < core.length && isConsonant(core[j])) {
+                    consCount++;
+                    j++;
+                }
+
+                // Si aucune voyelle ne suit, rattacher les consonnes finales à cette syllabe
+                if (j >= core.length) {
+                    while (i + 1 < core.length) {
+                        i++;
+                        current += core[i];
+                    }
+                    syllables.push(current);
+                    current = "";
+                } else if (consCount === 0 || consCount === 1) {
+                    syllables.push(current);
+                    current = "";
+                } else if (consCount >= 2) {
+                    const pair = core.slice(i + 1, i + 3).toLowerCase();
+                    if (consCount === 2 && INSEPARABLE_CLUSTERS.includes(pair)) {
+                        syllables.push(current);
+                        current = "";
+                    } else {
+                        i++;
+                        current += core[i];
+                        syllables.push(current);
+                        current = "";
+                    }
+                }
+            }
+            i++;
+        }
+
+        if (current.length > 0) {
+            if (syllables.length > 0 && !current.split('').some(isVowel)) {
+                syllables[syllables.length - 1] += current;
+            } else {
+                syllables.push(current);
+            }
+        }
+
+        return { prefix, syllables, suffix, silent };
+    }
+
+    // =====================================================================
+    // 3. GESTION DE L'INTERFACE, DU SUIVI & DE L'AUDIO
+    // =====================================================================
+    let currentTextObj = TEXT_DATABASE[0];
+    let currentFontSize = 22;
+    let colorModeActive = true;
+    let selectedWordClean = "";
+
+    // Chargement de l'historique sauvegardé localement dans le navigateur
+    let userProgress = JSON.parse(localStorage.getItem("syllabup_progress")) || {
+        streak: 0,
+        history: [],
+        difficultWords: []
+    };
+
+    function saveProgress() {
+        localStorage.setItem("syllabup_progress", JSON.stringify(userProgress));
+        updateStatsUI();
+    }
+
+    function updateStatsUI() {
+        document.getElementById("streak-display").textContent = `🔥 ${userProgress.streak} séance(s) validée(s)`;
+        document.getElementById("words-count-display").textContent = `📌 ${userProgress.difficultWords.length} mot(s) à revoir`;
+
+        const diffList = document.getElementById("difficult-words-list");
+        if (userProgress.difficultWords.length === 0) {
+            diffList.textContent = "Aucun mot difficile enregistré.";
+        } else {
+            diffList.innerHTML = "Mots à travailler : <strong>" + userProgress.difficultWords.join(", ") + "</strong>";
+        }
+
+        const historyList = document.getElementById("history-list");
+        historyList.innerHTML = "";
+        if (userProgress.history.length === 0) {
+            historyList.innerHTML = `<li class="history-item" style="color: var(--text-muted);">Aucune séance enregistrée pour le moment.</li>`;
+        } else {
+            userProgress.history.slice().reverse().forEach(entry => {
+                const li = document.createElement("li");
+                li.className = "history-item";
+                li.innerHTML = `
+                    <div>
+                        <strong>${entry.title}</strong> <span class="tag" style="margin-left:6px;">Niv. ${entry.level}</span>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">${entry.date}</div>
+                    </div>
+                    <span style="font-weight: 600;">${entry.rating}</span>
+                `;
+                historyList.appendChild(li);
+            });
+        }
+    }
+
+    function renderText(textObj) {
+        currentTextObj = textObj;
+        document.getElementById("text-title").textContent = textObj.title;
+        document.getElementById("current-tag").textContent = `Niveau ${textObj.level} • ${textObj.theme.toUpperCase()}`;
+        document.getElementById("word-inspector").style.display = "none";
+
+        const readingArea = document.getElementById("reading-area");
+        readingArea.innerHTML = "";
+
+        const words = textObj.text.split(/\s+/);
+        words.forEach((rawWord, index) => {
+            const parsed = syllabifyWord(rawWord);
+            const wordSpan = document.createElement("span");
+            wordSpan.className = "word";
+
+            const cleanWord = rawWord.replace(/[^a-zA-ZÀ-ÿœæŒÆ'-]/g, "");
+            if (userProgress.difficultWords.includes(cleanWord.toLowerCase())) {
+                wordSpan.classList.add("difficult-marked");
+            }
+
+            if (parsed.prefix) {
+                wordSpan.appendChild(document.createTextNode(parsed.prefix));
+            }
+
+            parsed.syllables.forEach((syl, sIdx) => {
+                const sylSpan = document.createElement("span");
+                sylSpan.className = sIdx % 2 === 0 ? "syl-even" : "syl-odd";
+                sylSpan.textContent = syl;
+                wordSpan.appendChild(sylSpan);
+            });
+
+            if (parsed.silent) {
+                const silentSpan = document.createElement("span");
+                silentSpan.className = "silent-letter";
+                silentSpan.textContent = parsed.silent;
+                wordSpan.appendChild(silentSpan);
+            }
+
+            if (parsed.suffix) {
+                wordSpan.appendChild(document.createTextNode(parsed.suffix));
+            }
+
+            wordSpan.onclick = () => inspectAndSpeakWord(rawWord, parsed);
+
+            readingArea.appendChild(wordSpan);
+            if (index < words.length - 1) {
+                readingArea.appendChild(document.createTextNode(" "));
+            }
+        });
+
+        renderQuiz(textObj.questions || []);
+    }
+
+    function renderQuiz(questions) {
+        const container = document.getElementById("quiz-container");
+        if (!questions || questions.length === 0) {
+            container.style.display = "none";
+            return;
+        }
+        container.style.display = "block";
+        container.innerHTML = `<h4 style="margin-bottom: 12px;">🎯 Vérifie ta compréhension</h4>`;
+
+        questions.forEach((item, qIdx) => {
+            const div = document.createElement("div");
+            div.className = "quiz-item";
+            div.innerHTML = `<div class="quiz-question">${qIdx + 1}. ${item.q}</div>`;
+
+            const optsDiv = document.createElement("div");
+            optsDiv.className = "quiz-options";
+
+            item.options.forEach((optText, oIdx) => {
+                const btn = document.createElement("button");
+                btn.className = "quiz-btn";
+                btn.textContent = optText;
+                btn.onclick = () => {
+                    Array.from(optsDiv.children).forEach(b => b.classList.remove("correct", "wrong"));
+                    if (oIdx === item.answer) {
+                        btn.classList.add("correct");
+                        showToast("Bonne réponse ! 👍");
+                    } else {
+                        btn.classList.add("wrong");
+                    }
+                };
+                optsDiv.appendChild(btn);
+            });
+
+            div.appendChild(optsDiv);
+            container.appendChild(div);
+        });
+    }
+
+    // Zoom sur un mot cliqué + prononciation audio
+    function inspectAndSpeakWord(rawWord, parsed) {
+        const inspector = document.getElementById("word-inspector");
+        const sylContainer = document.getElementById("inspector-syllables-text");
+        inspector.style.display = "flex";
+
+        selectedWordClean = rawWord.replace(/[^a-zA-ZÀ-ÿœæŒÆ'-]/g, "").toLowerCase();
+
+        sylContainer.innerHTML = "";
+        parsed.syllables.forEach((syl, idx) => {
+            const span = document.createElement("span");
+            span.style.color = idx % 2 === 0 ? "var(--syl-1)" : "var(--syl-2)";
+            span.textContent = syl;
+            sylContainer.appendChild(span);
+
+            if (idx < parsed.syllables.length - 1) {
+                const sep = document.createElement("span");
+                sep.style.color = "#94a3b8";
+                sep.textContent = " - ";
+                sylContainer.appendChild(sep);
+            }
+        });
+
+        if (parsed.silent) {
+            const silentSpan = document.createElement("span");
+            silentSpan.style.color = "var(--silent)";
+            silentSpan.textContent = parsed.silent;
+            sylContainer.appendChild(silentSpan);
+        }
+
+        speakText(selectedWordClean, 0.75);
+
+        document.getElementById("btn-speak-word").onclick = () => speakText(selectedWordClean, 0.65);
+        document.getElementById("btn-mark-difficult").onclick = () => {
+            if (selectedWordClean && !userProgress.difficultWords.includes(selectedWordClean)) {
+                userProgress.difficultWords.push(selectedWordClean);
+                saveProgress();
+                renderText(currentTextObj);
+                showToast(`Mot "${selectedWordClean}" ajouté à la liste à revoir.`);
+            }
+        };
+    }
+
+    // Synthèse vocale intégrée au navigateur
+    function speakText(text, customRate = null) {
+        if (!("speechSynthesis" in window)) {
+            showToast("La synthèse vocale n'est pas supportée par ce navigateur.");
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "fr-FR";
+        utterance.rate = customRate || parseFloat(document.getElementById("speed-select").value);
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function speakFullText() {
+        speakText(currentTextObj.text);
+    }
+
+    function stopSpeech() {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+        }
+    }
+
+    function toggleColors() {
+        colorModeActive = !colorModeActive;
+        const area = document.getElementById("reading-area");
+        const btn = document.getElementById("btn-toggle-colors");
+        if (colorModeActive) {
+            area.classList.add("color-mode");
+            btn.classList.add("active");
+            btn.textContent = "🎨 Couleurs Syllabes : ON";
+        } else {
+            area.classList.remove("color-mode");
+            btn.classList.remove("active");
+            btn.textContent = "🎨 Couleurs Syllabes : OFF";
+        }
+    }
+
+    function changePalette() {
+        const val = document.getElementById("palette-select").value;
+        const root = document.documentElement;
+        if (val === "blue-red") {
+            root.style.setProperty("--syl-1", "#1d4ed8");
+            root.style.setProperty("--syl-2", "#b91c1c");
+        } else if (val === "black-blue") {
+            root.style.setProperty("--syl-1", "#0f172a");
+            root.style.setProperty("--syl-2", "#2563eb");
+        } else if (val === "green-purple") {
+            root.style.setProperty("--syl-1", "#15803d");
+            root.style.setProperty("--syl-2", "#7e22ce");
+        }
+    }
+
+    function changeFontSize(delta) {
+        currentFontSize = Math.min(34, Math.max(16, currentFontSize + delta));
+        document.documentElement.style.setProperty("--font-size-reading", currentFontSize + "px");
+    }
+
+    function loadNextText() {
+        stopSpeech();
+        const level = parseInt(document.getElementById("level-select").value);
+        const theme = document.getElementById("theme-select").value;
+
+        let filtered = TEXT_DATABASE.filter(t => t.level === level);
+        if (theme !== "all") {
+            const byTheme = filtered.filter(t => t.theme === theme);
+            if (byTheme.length > 0) filtered = byTheme;
+        }
+
+        const candidates = filtered.filter(t => t.id !== currentTextObj.id);
+        const pool = candidates.length > 0 ? candidates : filtered;
+        const chosen = pool[Math.floor(Math.random() * pool.length)];
+
+        renderText(chosen);
+    }
+
+    // Copier le texte et ouvrir le site officiel LireCouleur si souhaité
+    function openInLireCouleur() {
+        navigator.clipboard.writeText(currentTextObj.text).then(() => {
+            showToast("Texte copié ! Colle-le dans LireCouleur.");
+            window.open("https://lirecouleur.arkaline.fr/", "_blank");
+        });
+    }
+
+    function toggleCustomText() {
+        const box = document.getElementById("custom-text-box");
+        box.style.display = box.style.display === "block" ? "none" : "block";
+    }
+
+    function applyCustomText() {
+        const raw = document.getElementById("custom-input").value.trim();
+        if (!raw) return;
+        renderText({
+            id: Date.now(),
+            level: document.getElementById("level-select").value,
+            theme: "Perso",
+            title: "Texte personnalisé",
+            text: raw,
+            questions: []
+        });
+        document.getElementById("custom-text-box").style.display = "none";
+        showToast("Texte découpé en syllabes !");
+    }
+
+    // Validation et partage du carnet de suivi
+    function validateSession(rating) {
+        const today = new Date().toLocaleDateString("fr-FR", {
+            day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit"
+        });
+
+        userProgress.streak += 1;
+        userProgress.history.push({
+            date: today,
+            title: currentTextObj.title,
+            level: currentTextObj.level,
+            rating: rating
+        });
+
+        saveProgress();
+        showToast("Séance enregistrée dans le carnet !");
+    }
+
+    function clearDifficultWords() {
+        if (userProgress.difficultWords.length === 0) return;
+        userProgress.difficultWords = [];
+        saveProgress();
+        renderText(currentTextObj);
+        showToast("Liste des mots difficiles effacée.");
+    }
+
+    function generateReportText() {
+        let report = `=== BILAN DE LECTURE SYLLAB'UP ===\n`;
+        report += `Date du bilan : ${new Date().toLocaleDateString("fr-FR")}\n`;
+        report += `Total de séances validées : ${userProgress.streak}\n\n`;
+
+        report += `--- DERNIÈRES LECTURES ---\n`;
+        if (userProgress.history.length === 0) {
+            report += `Aucune séance validée pour le moment.\n`;
+        } else {
+            userProgress.history.slice(-10).forEach(h => {
+                report += `• [${h.date}] "${h.title}" (Niveau ${h.level}) -> Ressenti : ${h.rating}\n`;
+            });
+        }
+
+        report += `\n--- MOTS NOTÉS COMME DIFFICILES ---\n`;
+        report += userProgress.difficultWords.length > 0
+            ? userProgress.difficultWords.join(", ")
+            : "Aucun mot difficile signalé.";
+
+        return report;
+    }
+
+    function copyReportToClipboard() {
+        const text = generateReportText();
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("Bilan copié ! Tu peux le coller dans un message ou un e-mail.");
+        });
+    }
+
+    function downloadReport() {
+        const text = generateReportText();
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `suivi-lecture-${new Date().toISOString().slice(0, 10)}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    // Initialisation au démarrage
+    document.getElementById("library-counter").textContent = `${TEXT_DATABASE.length} textes disponibles`;
+    updateStatsUI();
+    renderText(TEXT_DATABASE[0]);
+</script>
+
+</body>
+</html>
